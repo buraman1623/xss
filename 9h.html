@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>9H</title>
+</head>
+<body>
+  <input type="text" class="js-text-input" placeholder="Type something">
+  <button class="sublit" onclick="outTotal()">submit</button>
+  <p class="js-show-text"></p>
+  <script>
+
+    function outTotal() {
+      const inputElement = document.querySelector('.js-text-input');
+      let text = inputElement.value;
+
+      document.querySelector('.js-show-text').innerHTML = `${text}`;
+    }
+    
+  </script>
+</body>
+</html>
