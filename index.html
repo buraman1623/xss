@@ -1,69 +1,79 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XSS Vulnerability Test</title>
+    <title>XSS Vulnerability Demo</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
-            padding: 20px;
-            background-color: #f4f4f4;
-            border-radius: 8px;
         }
-        h1 {
-            color: #333;
-        }
-        form {
-            margin-bottom: 20px;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        .output {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+        .alert {
+            color: red;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<h1>XSS Vulnerability Testing</h1>
-<form id="xssForm">
-    <label for="userInput">Enter some text:</label>
-    <input type="text" id="userInput" placeholder="Type something here...">
-    <button type="submit">Submit</button>
-</form>
+    <h1>XSS Vulnerability Demonstration</h1>
 
-<div class="output" id="outputArea"></div>
+    <!-- Reflected XSS -->
+    <h2>Reflected XSS</h2>
+    <form id="reflected-form" action="" method="GET">
+        <label for="reflected-input">Enter your name:</label>
+        <input type="text" id="reflected-input" name="name">
+        <button type="submit">Submit</button>
+    </form>
+    <div id="reflected-output"></div>
 
-<script>
-    document.getElementById('xssForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the form from submitting normally
-        const userInput = document.getElementById('userInput').value;
-        document.getElementById('outputArea').innerHTML = userInput; // Vulnerable to XSS
-    });
-</script>
+    <script>
+        // Reflected XSS
+        const urlParams = new URLSearchParams(window.location.search);
+        const userName = urlParams.get('name');
+        if (userName) {
+            document.getElementById('reflected-output').innerHTML = `Hello, ${userName}!`; // Vulnerable to XSS
+        }
+    </script>
+
+    <!-- Stored XSS -->
+    <h2>Stored XSS</h2>
+    <form id="stored-form">
+        <label for="stored-input">Leave a message:</label>
+        <textarea id="stored-input" name="message"></textarea>
+        <button type="button" onclick="storeMessage()">Store Message</button>
+    </form>
+    <div id="stored-output"></div>
+
+    <script>
+        let storedMessages = [];
+
+        function storeMessage() {
+            const message = document.getElementById('stored-input').value;
+            storedMessages.push(message);
+            displayMessages();
+        }
+
+        function displayMessages() {
+            const outputDiv = document.getElementById('stored-output');
+            outputDiv.innerHTML = ''; // Clear previous messages
+            storedMessages.forEach(msg => {
+                outputDiv.innerHTML += `<p>${msg}</p>`; // Vulnerable to XSS
+            });
+        }
+    </script>
+
+    <!-- DOM-based XSS -->
+    <h2>DOM-based XSS</h2>
+    <button onclick="executeXSS()">Click me to execute XSS</button>
+
+    <script>
+        function executeXSS() {
+            const xssPayload = "<script>alert('DOM-based XSS!');</script>";
+            document.body.innerHTML += xssPayload; // Vulnerable to XSS
+        }
+    </script>
 
 </body>
 </html>
